@@ -22,7 +22,12 @@ export default function SignInPage() {
         body: JSON.stringify({ email, password }),
       })
 
-      const data = await res.json()
+      let data
+      try {
+        data = await res.json()
+      } catch {
+        throw new Error('Server error. Please try again.')
+      }
 
       if (!res.ok) {
         throw new Error(data.error || 'Sign in failed')
@@ -79,6 +84,13 @@ export default function SignInPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <p className="mt-4 text-center text-white/50 text-sm">
+          Don't have an account?{' '}
+          <a href="/sign-up" className="text-[#ff2d2d] hover:underline">
+            Sign up
+          </a>
+        </p>
       </div>
     </div>
   )

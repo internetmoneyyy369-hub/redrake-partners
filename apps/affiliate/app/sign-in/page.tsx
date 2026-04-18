@@ -23,7 +23,12 @@ export default function SignInPage() {
         body: JSON.stringify({ email, password }),
       })
 
-      const data = await res.json()
+      let data
+      try {
+        data = await res.json()
+      } catch {
+        throw new Error('Server error. Please try again.')
+      }
 
       if (!res.ok) {
         throw new Error(data.error || 'Sign in failed')
