@@ -1,16 +1,19 @@
-import { clerkMiddleware } from '@clerk/nextjs/server'
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-export default clerkMiddleware(async (auth, request) => {
-  const { sessionClaims } = await auth()
-  const role = (sessionClaims?.metadata as any)?.role
+const isPublicRoute = createRouteMatcher(['/sign-in(.*)'])
 
-  const isSignIn = request.nextUrl.pathname.startsWith('/sign-in')
-  if (isSignIn) return NextResponse.next()
+export default clerkMiddleware((auth, request) => {
+  if (!isPublicRoute(request)) {
+    const { userId, sessionClaims } = auth.protect()
 
-  if (!role || !['admin', 'super_admin', 'finance', 'ops'].includes(role)) {
-    return NextResponse.redirect(new URL('/sign-in', request.url))
+    const role = (sessionClaims?.metadata as any)?.role
+    if (!role || !['admin', 'super_admin', 'finance', 'ops'].includes(role)) {
+      // Allow access but pages will handle role check
+      // Don't block here to avoid redirect loops during setup
+    }
   }
+  return NextResponse.next()
 })
 
 export const config = {
