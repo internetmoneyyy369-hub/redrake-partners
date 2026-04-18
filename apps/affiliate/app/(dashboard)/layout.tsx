@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
-import { LayoutDashboard, Link2, BarChart2, Users, Wallet, Image, Tag, User, HeadphonesIcon } from 'lucide-react'
+import { LayoutDashboard, Link2, BarChart2, Users, Wallet, Image, Tag, User, HeadphonesIcon, LogOut } from 'lucide-react'
 
 const navItems = [
   { href: '/', label: 'Overview', icon: LayoutDashboard },
@@ -35,7 +34,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           ))}
         </nav>
         <div className="p-4 border-t border-white/10">
-          <UserButton afterSignOutUrl="/sign-in" />
+          <form action="/api/auth/sign-out" method="POST">
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-3 py-2 text-white/60 hover:text-white text-sm"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </form>
         </div>
       </aside>
 
