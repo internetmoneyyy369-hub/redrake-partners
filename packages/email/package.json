@@ -1,0 +1,17 @@
+{
+  "name": "@redrake/email",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.36",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

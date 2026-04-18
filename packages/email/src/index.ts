@@ -1,0 +1,5 @@
+export * from './templates/affiliate-approved'
+export * from './templates/affiliate-rejected'
+export * from './templates/welcome'
+export * from './templates/lead-qualified'
+export * from './templates/payout-processed'
