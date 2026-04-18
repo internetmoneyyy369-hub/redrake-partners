@@ -17,8 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/dashboard"
+      afterSignInUrl="/"
+      afterSignUpUrl="/"
     >
       <html lang="en">
         <body className={`${inter.variable} font-sans antialiased`}>{children}</body>
