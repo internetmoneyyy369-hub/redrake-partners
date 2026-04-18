@@ -1,10 +1,8 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
+import { requireAuth } from '@redrake/db'
 import { createSupabaseServerClient } from '@redrake/db'
 
 export default async function AdminDashboard() {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  await requireAuth()
 
   const supabase = createSupabaseServerClient()
 

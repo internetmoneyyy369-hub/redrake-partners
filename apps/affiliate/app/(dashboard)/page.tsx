@@ -1,21 +1,18 @@
-import { auth, currentUser } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
+import { getUser } from '@redrake/db'
 import { createSupabaseServerClient } from '@redrake/db'
+import { redirect } from 'next/navigation'
 
 export default async function OverviewPage() {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
-
-  const user = await currentUser()
-  if (!user) return null
+  const user = await getUser()
+  if (!user) redirect('/sign-in')
 
   const supabase = createSupabaseServerClient()
 
-  // Get affiliate profile
+  // Get affiliate profile using Supabase user ID
   const { data: dbUser } = await supabase
     .from('users')
     .select('id')
-    .eq('clerk_id', user.id)
+    .eq('email', user.email)
     .single()
 
   const { data: profile } = dbUser
@@ -32,7 +29,7 @@ export default async function OverviewPage() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">
-          Welcome back, {user.firstName ?? 'Affiliate'} 👋
+          Welcome back, {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Affiliate'} 👋
         </h1>
         <p className="text-white/50 text-sm mt-1">Here&apos;s your performance overview</p>
       </div>

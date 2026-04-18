@@ -10,20 +10,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.23.2",
+    "@hookform/resolvers": "^5.1.1",
     "@redrake/db": "workspace:*",
     "@redrake/email": "workspace:*",
     "@redrake/ui": "workspace:*",
+    "@supabase/ssr": "^0.10.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
     "next": "^15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "resend": "^4.6.0",
-    "zod": "^3.25.71",
     "react-hook-form": "^7.59.0",
-    "@hookform/resolvers": "^5.1.1",
-    "lucide-react": "^0.525.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.3.1"
+    "resend": "^4.6.0",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

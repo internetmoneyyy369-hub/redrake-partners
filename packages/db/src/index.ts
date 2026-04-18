@@ -1,5 +1,6 @@
 export * from './client'
 export * from './types'
+export * from './auth'
 export * from './queries/affiliates'
 export * from './queries/analytics'
 export * from './queries/wallet'
