@@ -1,19 +1,19 @@
-import { auth } from '@clerk/nextjs/server'
+import { getUser } from '@redrake/db'
 import { createSupabaseServerClient } from '@redrake/db'
 import { nanoid } from 'nanoid'
 
 const TRACKING_BASE = process.env.NEXT_PUBLIC_TRACKING_BASE_URL ?? 'https://go.redrake.io'
 
 export async function GET() {
-  const { userId } = await auth()
-  if (!userId) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  const user = await getUser()
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const supabase = createSupabaseServerClient()
-  const { data: user } = await supabase.from('users').select('id').eq('clerk_id', userId).single()
-  if (!user) return Response.json({ error: 'User not found' }, { status: 404 })
+  const { data: dbUser } = await supabase.from('users').select('id').eq('id', user.id).single()
+  if (!dbUser) return Response.json({ error: 'User not found' }, { status: 404 })
 
   const { data: profile } = await supabase
-    .from('affiliate_profiles').select('id').eq('user_id', user.id).single()
+    .from('affiliate_profiles').select('id').eq('user_id', dbUser.id).single()
   if (!profile) return Response.json({ error: 'Profile not found' }, { status: 404 })
 
   const { data: links } = await supabase
@@ -26,17 +26,17 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth()
-  if (!userId) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  const user = await getUser()
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
   const supabase = createSupabaseServerClient()
 
-  const { data: user } = await supabase.from('users').select('id').eq('clerk_id', userId).single()
-  if (!user) return Response.json({ error: 'User not found' }, { status: 404 })
+  const { data: dbUser } = await supabase.from('users').select('id').eq('id', user.id).single()
+  if (!dbUser) return Response.json({ error: 'User not found' }, { status: 404 })
 
   const { data: profile } = await supabase
-    .from('affiliate_profiles').select('id').eq('user_id', user.id).single()
+    .from('affiliate_profiles').select('id').eq('user_id', dbUser.id).single()
   if (!profile) return Response.json({ error: 'Profile not found' }, { status: 404 })
 
   const shortCode = nanoid(6)

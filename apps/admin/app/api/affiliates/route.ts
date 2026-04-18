@@ -1,9 +1,9 @@
-import { auth } from '@clerk/nextjs/server'
+import { getUser } from '@redrake/db'
 import { createSupabaseServerClient } from '@redrake/db'
 
 export async function GET(req: Request) {
-  const { userId } = await auth()
-  if (!userId) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  const user = await getUser()
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const url = new URL(req.url)
   const status = url.searchParams.get('status')

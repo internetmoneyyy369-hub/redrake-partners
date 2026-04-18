@@ -1,9 +1,9 @@
-import { auth, clerkClient } from '@clerk/nextjs/server'
+import { getUser } from '@redrake/db'
 import { createSupabaseServerClient } from '@redrake/db'
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { userId } = await auth()
-  if (!userId) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  const user = await getUser()
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
   const { reason } = await req.json()
@@ -13,18 +13,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     .from('affiliate_profiles')
     .update({ status: 'rejected', rejection_reason: reason })
     .eq('id', id)
-    .select('*, users(clerk_id)')
+    .select('*')
     .single()
 
   if (error || !profile) return Response.json({ error: 'Profile not found' }, { status: 404 })
-
-  const clerkId = (profile as any).users?.clerk_id
-  if (clerkId) {
-    const clerk = await clerkClient()
-    await clerk.users.updateUserMetadata(clerkId, {
-      publicMetadata: { role: 'affiliate', affiliate_status: 'rejected' },
-    })
-  }
 
   return Response.json({ success: true })
 }
